@@ -1,6 +1,7 @@
 const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
 const app = express();
 
 app.use(express.static(__dirname + '/public'));
@@ -13,3 +14,12 @@ app.get('/', function (req, res, next) {
 })
 
 app.listen(5000);
+
+
+mongoose.connect('mongodb://localhost:27017/Restro')
+    .then(function (result) {
+        console.log("connected");
+    })
+    .catch(function (err) {
+        console.log(err);
+    });
