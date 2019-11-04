@@ -19,7 +19,6 @@
 
     <link rel="stylesheet" href="css/aos.css">
 
-
     <link rel="stylesheet" href="css/ionicons.min.css">
 
     <link rel="stylesheet" href="css/bootstrap-datepicker.css">
@@ -29,22 +28,22 @@
     <link rel="stylesheet" href="css/flaticon.css">
     <link rel="stylesheet" href="css/icomoon.css">
     <link rel="stylesheet" href="css/style.css">
+
 </head>
 
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
         <div class="container">
             <a class="navbar-brand" href="index.html">Coffee<small>Blend</small></a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav"
-                aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="oi oi-menu"></span> Menu
-            </button>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav" aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="oi oi-menu"></span> Menu
+      </button>
             <div class="collapse navbar-collapse" id="ftco-nav">
                 <ul class="navbar-nav ml-auto">
                     <li class="nav-item"><a href="index.html" class="nav-link">Home</a></li>
                     <li class="nav-item"><a href="menu.html" class="nav-link">Menu</a></li>
-                    <li class="nav-item"><a href="signup.html" class="nav-link">Sign up</a></li>
-                    <li class="nav-item active"><a href="login.html" class="nav-link">Login</a></li>
+                    <li class="nav-item active"><a href="signup.html" class="nav-link">Sign up</a></li>
+                    <li class="nav-item"><a href="login.html" class="nav-link">Login</a></li>
                     <li class="nav-item"><a href="contact.html" class="nav-link">Contact</a></li>
 
                 </ul>
@@ -62,8 +61,8 @@
 
                     <div class="col-md-7 col-sm-12 text-center ftco-animate">
                         <h1 class="mb-3 mt-5 bread">Signup Details</h1>
-                        <p class="breadcrumbs"><span class="mr-2"><a href="index.html">Home</a></span> <span
-                                class="mr-2"><a href="signup.html">Sign Up</a></span> <span>Login</span></p>
+                        <p class="breadcrumbs"><span class="mr-2"><a href="index.html">Home</a></span> <span class="mr-2"><a
+                  href="login.html">Login</a></span> <span>Sign up</span></p>
                     </div>
 
                 </div>
@@ -73,33 +72,38 @@
 
     <section class="ftco-section">
         <div class="container">
-         
             <div class="row">
                 <div class="col-md-2"></div>
 
-                <div class="col-md-8 ftco-animate">
-                    <div class="comment-form-wrap pt-2">
-                     
-                        <h3 class="mb-5 text-center">Login</h3>
-                        <div class="icon d-flex justify-content-center align-items-center mb-5">
-                                <span class="flaticon-choices" style="font-size: 80px;"></span>
+                <div class="col-md-8 ftco-animate" id="m1">
+                    <div class="comment-form-wrap pt-5">
+                        <h3 class="mb-5 text-center">Sign Up</h3>
+                        <form action="" method="" onsubmit=event.preventDefault()>
+                            <div class="form-group">
+                                <label for="name">Name *</label>
+                                <input type="text" class="form-control" name="name" id="sname">
                             </div>
-                        <form action="#">
 
                             <div class="form-group">
                                 <label for="userName"> User Name *</label>
-                                <input type="text" class="form-control" id="userName">
+                                <input type="text" class="form-control" name="userName" id="suserName">
                             </div>
-
+                            <div class="form-group">
+                                <label for="email">Email *</label>
+                                <input type="email" class="form-control" name="email" id="semail">
+                            </div>
 
                             <div class="form-group">
                                 <label for="passwd">Password *</label>
-                                <input type="password" class="form-control" id="passwd">
+                                <input type="password" class="form-control" name="passwd" id="spasswd">
+                            </div>
+                            <div class="form-group">
+                                <label for="phone number">Phone Number *</label>
+                                <input type="text" class="form-control" name="phoneNumber" id="sphoneNumber">
                             </div>
 
-
                             <div class="form-group text-center">
-                                <input type="submit" value="Submit" class="btn py-3 px-4 btn-primary">
+                                <input type="submit" value="Submit" class="btn py-3 px-4 btn-primary" onclick="execute()">
                             </div>
 
                         </form>
@@ -118,9 +122,7 @@
                 <div class="col-lg-3 col-md-6 mb-5 mb-md-5">
                     <div class="ftco-footer-widget mb-4">
                         <h2 class="ftco-heading-2">About Us</h2>
-                        <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia,
-                            there live the
-                            blind texts.</p>
+                        <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.</p>
                         <ul class="ftco-footer-social list-unstyled float-md-left float-lft mt-5">
                             <li class="ftco-animate"><a href="#"><span class="icon-twitter"></span></a></li>
                             <li class="ftco-animate"><a href="#"><span class="icon-facebook"></span></a></li>
@@ -134,8 +136,7 @@
                         <div class="block-21 mb-4 d-flex">
                             <a class="blog-img mr-4" style="background-image: url(images/image_1.jpg);"></a>
                             <div class="text">
-                                <h3 class="heading"><a href="#">Even the all-powerful Pointing has no control about</a>
-                                </h3>
+                                <h3 class="heading"><a href="#">Even the all-powerful Pointing has no control about</a></h3>
                                 <div class="meta">
                                     <div><a href="#"><span class="icon-calendar"></span> Sept 15, 2018</a></div>
                                     <div><a href="#"><span class="icon-person"></span> Admin</a></div>
@@ -146,8 +147,7 @@
                         <div class="block-21 mb-4 d-flex">
                             <a class="blog-img mr-4" style="background-image: url(images/image_2.jpg);"></a>
                             <div class="text">
-                                <h3 class="heading"><a href="#">Even the all-powerful Pointing has no control about</a>
-                                </h3>
+                                <h3 class="heading"><a href="#">Even the all-powerful Pointing has no control about</a></h3>
                                 <div class="meta">
                                     <div><a href="#"><span class="icon-calendar"></span> Sept 15, 2018</a></div>
                                     <div><a href="#"><span class="icon-person"></span> Admin</a></div>
@@ -173,13 +173,11 @@
                         <h2 class="ftco-heading-2">Have a Questions?</h2>
                         <div class="block-23 mb-3">
                             <ul>
-                                <li><span class="icon icon-map-marker"></span><span class="text">203 Fake St. Mountain
-                                        View, San
-                                        Francisco, California, USA</span></li>
-                                <li><a href="#"><span class="icon icon-phone"></span><span class="text">+2 392 3929
-                                            210</span></a></li>
+                                <li><span class="icon icon-map-marker"></span><span class="text">203 Fake St. Mountain View, San
+                    Francisco, California, USA</span></li>
+                                <li><a href="#"><span class="icon icon-phone"></span><span class="text">+2 392 3929 210</span></a></li>
                                 <li><a href="#"><span class="icon icon-envelope"></span><span
-                                            class="text">info@yourdomain.com</span></a></li>
+                      class="text">info@yourdomain.com</span></a></li>
                             </ul>
                         </div>
                     </div>
@@ -191,8 +189,9 @@
                     <p>
                         <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
                         Copyright &copy;
-                        <script>document.write(new Date().getFullYear());</script> All rights reserved | <i
-                            class="icon-heart" aria-hidden="true"></i> by <a href="" target="_blank">SBJIT</a>
+                        <script>
+                            document.write(new Date().getFullYear());
+                        </script> All rights reserved | <i class="icon-heart" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">SBJIT</a>
                         <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
                     </p>
                 </div>
@@ -204,9 +203,10 @@
 
     <!-- loader -->
     <div id="ftco-loader" class="show fullscreen"><svg class="circular" width="48px" height="48px">
-            <circle class="path-bg" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke="#eeeeee" />
-            <circle class="path" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke-miterlimit="10"
-                stroke="#F96D00" /></svg></div>
+      <circle class="path-bg" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke="#eeeeee" />
+      <circle class="path" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke-miterlimit="10"
+        stroke="#F96D00" /></svg></div>
+
 
 
     <script src="js/jquery.min.js"></script>
