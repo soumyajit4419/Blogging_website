@@ -26,6 +26,7 @@ router.post('/signup',
         }
         next();
     },
+
     function(req, res, next) {
         user.findOne({ userName: req.body.userName }, function(err, user) {
             if (err) return res.json({ status: 500, message: "Error on the server" });
