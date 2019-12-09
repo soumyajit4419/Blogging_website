@@ -79,7 +79,7 @@
     <script src="./js/global.js"></script>
 
     <script>
-
+        let url1 = "http://localhost:5000";
         $.ajax({
             url: url1 + "/getUserState",
             headers: {
@@ -88,14 +88,8 @@
             method: "GET",
             crossDomain: true,
             success: function (res) {
-                if (res.status === 422) {
-                    console.log(res);
-                    // $("#message").text(res.message);
-                    setTimeout(function () {
-                        window.location.reload(true);
-                    }, 2000);
-                }
-                else if (res.status === 415) {
+
+                if (res.status === 415) {
                     console.log(res);
                     window.location = "verify.html";
                 }
@@ -103,7 +97,6 @@
                 else if (res.status === 200) {
                     console.log(res);
                     // $("#message").text(res.message);
-                    window.localStorage.setItem('token', res.token);
                     window.location = "profile.html";
                 }
 

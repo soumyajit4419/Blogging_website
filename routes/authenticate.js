@@ -156,25 +156,26 @@ router.post('/verify', verifyToken, function (req, res, next) {
 
 });
 
-router.get('/getUserState', verifyToken, function (req, res, next) {
-    const id = req.userId;
-    User.findById(id, function (err, user) {
-        if (err) {
-            return res.json({ status: 500, message: "internal server error", err: err });
+router.get("/getUserState", verifyToken, function (req, res) {
+    const userId = req.userId;
+    async function getState() {
+        try {
+            const user = await User.findById(userId);
+            if (!user) {
+                return res.json({ status: 400, auth: false, message: 'User not found!' });
+            }
+            else if (user.isVerified == true) {
+                return res.json({ status: 200, auth: true, message: 'Token authenticated!', verified: true });
+            }
+            else { return res.json({ status: 415, auth: true, message: 'Token authenticated!', verified: false }); }
         }
-        else if (!user) {
-            return res.json({ status: 422, message: "user not found" });
+        catch (err) {
+            console.log(err);
+            return res.json({ status: 500, auth: false, message: 'Internal server error!', err: err });
         }
-        else if (user.isVerfied == true) {
-            return res.json({ status: 200, message: "token authenticated,user  verified" });
-        }
-        else if (user.isVerfied == false) {
-            return res.json({ status: 415, message: "token authenticated,user not verified" });
-        }
-
-    })
+    }
+    getState();
 });
-
 
 
 function verifyToken(req, res, next) {
