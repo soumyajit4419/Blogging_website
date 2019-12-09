@@ -23,16 +23,27 @@ router.post('/signup', [
         next();
     },
 
-    // function (req, res, next) {
-    //     User.findOne({ email: req.body.email }, function (err, user) {
-    //         if (err) return res.json({ status: 500, message: "Error on the server" });
-    //         else if (user) {
-    //             return res.json({ status: 415, message: "User already exits" });
-    //         }
-    //         else next();
-    //     });
+    function (req, res, next) {
+        User.findOne({ email: req.body.email }, function (err, user) {
+            if (err) return res.json({ status: 500, message: "Internal server error", err: err });
+            else if (user) {
+                return res.json({ status: 415, message: "email already exits" });
+            }
+            else next();
+        });
 
-    // },
+    },
+
+    function (req, res, next) {
+        User.findOne({ userName: req.body.userName }, function (err, user) {
+            if (err) return res.json({ status: 500, message: "Internal server error", err: err });
+            else if (user) {
+                return res.json({ status: 415, message: "user name already exits" });
+            }
+            else next();
+        });
+
+    },
 
     function (req, res, next) {
         const password = req.body.password;
@@ -48,11 +59,12 @@ router.post('/signup', [
         const email = req.body.email;
         const phoneNumber = req.body.phone;
         const password = req.body.password;
+        const gender = req.body.gender;
         const emailOTP = Math.floor(100000 + Math.random() * 900000).toString();
-        const newUser = new User({ userName: userName, email: email, phoneNumber: phoneNumber, password: password, emailOTP: emailOTP, isVerfied: false });
+        const newUser = new User({ userName: userName, email: email, phoneNumber: phoneNumber, password: password, emailOTP: emailOTP, isVerfied: false, gender: gender });
 
         newUser.save(function (err, user) {
-            if (err) return res.json({ status: 500, message: "Error on the server", err: err });
+            if (err) return res.json({ status: 500, message: "internal server error", err: err });
             else {
                 let token = jwt.sign({ id: user._id }, 'blogsuser', { expiresIn: 180 });
                 return res.json({ status: 200, message: "User created", token: token });

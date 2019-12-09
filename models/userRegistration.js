@@ -9,7 +9,8 @@ const userSchema = new schema({
     email: { type: String, required: true },
     phoneNumber: { type: String, required: true },
     isVerified: { type: Boolean, default: false },
-    emailOTP: { type: Number }
+    emailOTP: { type: Number },
+    gender:{type:String,required:true}
 
 });
 
