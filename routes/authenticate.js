@@ -75,4 +75,70 @@ router.post('/signup', [
 );
 
 
+router.post('/verify', verifyToken, function (req, res, next) {
+    const id = req.userId;
+    User.findById(id, function (err, user) {
+        if (err) {
+            return res.json({ status: 500, message: "internal server error", err: err });
+        }
+        else if (!user) {
+            return res.json({ status: 422, message: "user not found" });
+        }
+        else if (user.isVerfied == true) {
+            return res.json({ status: 415, message: "user already verified" });
+        }
+        else {
+            otp = req.body.otp;
+            if (user.emailOTP == otp) {
+                user.isVerfied = true;
+                user.save();
+                return res.json({ status: 200, message: "user verified sucessfully" });
+            }
+            else {
+                return res.json({ status: 422, message: "invalid otp" });
+            }
+        }
+    })
+
+});
+
+router.get('/getUserState', verifyToken, function (req, res, next) {
+    const id = req.userId;
+    User.findById(id, function (err, user) {
+        if (err) {
+            return res.json({ status: 500, message: "internal server error", err: err });
+        }
+        else if (!user) {
+            return res.json({ status: 422, message: "user not found" });
+        }
+        else if (user.isVerfied == true) {
+            return res.json({ status: 200, message: "token authenticated,user  verified" });
+        }
+        else if (user.isVerfied == false) {
+            return res.json({ status: 415, message: "token authenticated,user not verified" });
+        }
+
+    })
+});
+
+
+
+function verifyToken(req, res, next) {
+    const token = req.headers['access-token'];
+    if (!token) {
+        return res.json({ status: 422, message: "no token found" });
+    }
+    else {
+        jwt.verify(token, 'blogsuser', function (err, decoded) {
+            if (err) {
+                return res.json({ status: 500, message: "internal server error", err: err });
+            }
+            else {
+                req.userId = decoded.id;
+                next();
+            }
+
+        })
+    }
+}
 module.exports = router;
