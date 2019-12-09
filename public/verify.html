@@ -40,7 +40,8 @@
                     <h2 class="title">Verify Info</h2>
                     <form method="" onsubmit=event.preventDefault()>
                         <div class="input-group">
-                            <input class="input--style-3" type="text" placeholder="Email otp" name="otp" id="otp">
+                            <input class="input--style-3" type="text" placeholder="Email otp" name="otp" id="otp"
+                                required>
                         </div>
 
 
@@ -74,39 +75,36 @@
         function execute() {
             let url1 = "http://localhost:5000";
 
-            var name = $("#userName").val();
-            var email = $("#email").val();
-            var phno = $("#phoneNumber").val();
-            var passwd = $("#password").val();
-            var cpasswd = $("#cpassword").val();
-            var gender = $("#gender").val();
+            var otp = $("#otp").val();
+            if (otp == "") {
+                $("#otp").show();
+                return;
+            }
+
             $.ajax({
-                url: url1 + "/signup",
+                url: url1 + "/verify",
+                headers: {
+                    "access-token": localStorage.getItem("token")
+                },
                 method: "POST",
                 data: {
-                    userName: name,
-                    email: email,
-                    phone: phno,
-                    password: passwd,
-                    cpassword: cpasswd,
-                    gender: gender
-
+                    otp: otp
                 },
                 crossDomain: true,
                 success: function (res) {
                     if (res.status !== 200) {
                         console.log(res);
                         // $("#message").text(res.message);
-                        // setTimeout(function () {
-                        //     window.location.reload(true);
-                        // }, 2000);
+                        setTimeout(function () {
+                            window.location.reload(true);
+                        }, 2000);
                     }
 
                     else if (res.status === 200) {
                         console.log(res);
                         // $("#message").text(res.message);
-                        window.localStorage.setItem('token', res.token);
-                        // window.location = "/verify";
+                        //window.localStorage.setItem('token', res.token);
+                        window.location = "login.html";
                     }
 
                 },

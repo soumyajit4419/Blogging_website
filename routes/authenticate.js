@@ -74,6 +74,60 @@ router.post('/signup', [
     }
 );
 
+router.post('/login',
+    function (req, res, next) {
+        const userName = req.body.userName;
+        const password = req.body.password;
+        User.findOne({ userName: userName }, function (err, user) {
+            if (err) {
+                return res.json({ status: 500, message: "internal server error", err: err });
+            }
+            else if (!user) {
+                return res.json({ status: 422, message: "user name not found" });
+            }
+            else if (user) {
+                next();
+            }
+
+        })
+
+    },
+    function (req, res, next) {
+        const userName = req.body.userName;
+        User.findOne({ userName: userName }, function (err, user) {
+
+            if (err) {
+                return res.json({ status: 500, message: "internal server error", err: err });
+            }
+            else if (user) {
+                if (user.isVerified == true) { next(); }
+                else {
+                    return res.json({ status: 415, message: "user not verified" });
+                }
+            }
+        })
+
+    },
+
+    function (req, res, next) {
+        const userName = req.body.userName;
+        const password = req.body.password;
+        User.findOne({ userName: userName }, function (err, user) {
+            if (err) {
+                return res.json({ status: 500, message: "internal server error", err: err });
+            }
+            else if (user) {
+                if (user.password === password) {
+                    const token = jwt.sign({ id: user._id }, 'blogsuser', { expiresIn: 180 });
+                    return res.json({ status: 200, message: "User sucessfully loggedin", token: token });
+                }
+                else if (user.password !== password) {
+                    return res.json({ status: 422, message: "wrong password" });
+                }
+            }
+        })
+    }
+);
 
 router.post('/verify', verifyToken, function (req, res, next) {
     const id = req.userId;
@@ -90,7 +144,7 @@ router.post('/verify', verifyToken, function (req, res, next) {
         else {
             otp = req.body.otp;
             if (user.emailOTP == otp) {
-                user.isVerfied = true;
+                user.isVerified = true;
                 user.save();
                 return res.json({ status: 200, message: "user verified sucessfully" });
             }
