@@ -9,7 +9,9 @@
     <!-- Title Page-->
     <title>Signup page</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script> -->
+    <script src="https://code.jquery.com/jquery-3.4.1.js" crossorigin="anonymous"></script>
+
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <!-- Icons font CSS-->
     <link href="./vendor/mdi-font/css/material-design-iconic-font.min.css" rel="stylesheet" media="all">
@@ -30,8 +32,6 @@
 <body>
     <div class="page-wrapper bg-gra-01 p-t-180 p-b-100 font-poppins">
 
-
-
         <div class="wrapper wrapper--w780">
 
             <div class="card card-3">
@@ -40,7 +40,8 @@
                     <h2 class="title">Registration Info</h2>
                     <form method="" onsubmit=event.preventDefault()>
                         <div class="input-group">
-                            <input class="input--style-3" type="text" placeholder="User Name" name="name" id="userName">
+                            <input class="input--style-3" type="text" placeholder="User Name" name="name" id="userName"
+                                required>
                         </div>
 
                         <div class="input-group">
@@ -55,21 +56,22 @@
                             </div>
                         </div>
                         <div class="input-group">
-                            <input class="input--style-3" type="email" placeholder="Email" name="email" id="email">
+                            <input class="input--style-3" type="email" placeholder="Email" name="email" id="email"
+                                required>
                         </div>
                         <div class="input-group">
                             <input class="input--style-3" type="text" placeholder="Password" name="password"
-                                id="password">
+                                id="password" required>
                         </div>
 
                         <div class="input-group">
                             <input class="input--style-3" type="text" placeholder="Confirm Password" name="cpassword"
-                                id="cpassword">
+                                id="cpassword" required>
                         </div>
 
                         <div class="input-group">
                             <input class="input--style-3" type="text" placeholder="Phone" name="phoneNumber"
-                                id="phoneNumber">
+                                id="phoneNumber" required>
                         </div>
 
 
@@ -81,78 +83,111 @@
                         <br>
                     </form>
                     <div class="p-t-10 text-center">
-                        <button class="btn btn--pill btn--purple " ><a href="travel.html" class="btn--purple">Return to
+                        <button class="btn btn--pill btn--purple "><a href="travel.html" class="btn--purple">Return to
                                 home</a></button>
+                        <br>
+                        <div class="p-t-10 text-center">
+                            <h3 class="" id="message" style="color: cornsilk;"></h3>
+                        </div>
                     </div>
+
                 </div>
 
             </div>
         </div>
-    </div>
 
-    <!-- Jquery JS-->
-    <script src="./vendor/jquery/jquery.min.js"></script>
-    <!-- Vendor JS-->
-    <script src="./vendor/select2/select2.min.js"></script>
-    <script src="./vendor/datepicker/moment.min.js"></script>
-    <script src="./vendor/datepicker/daterangepicker.js"></script>
+        <!-- Jquery JS-->
+        <!-- <script src="./vendor/jquery/jquery.min.js"></script> -->
+        <!-- Vendor JS-->
+        <script src="./vendor/select2/select2.min.js"></script>
+        <script src="./vendor/datepicker/moment.min.js"></script>
+        <script src="./vendor/datepicker/daterangepicker.js"></script>
 
-    <!-- Main JS-->
-    <script src="./js/global.js"></script>
+        <!-- Main JS-->
+        <script src="./js/global.js"></script>
 
-    <script>
+        <script>
 
-        function execute() {
-            let url1 = "http://localhost:5000";
 
-            var name = $("#userName").val();
-            var email = $("#email").val();
-            var phno = $("#phoneNumber").val();
-            var passwd = $("#password").val();
-            var cpasswd = $("#cpassword").val();
-            var gender = $("#gender").val();
-            $.ajax({
-                url: url1 + "/signup",
-                method: "POST",
-                data: {
-                    userName: name,
-                    email: email,
-                    phone: phno,
-                    password: passwd,
-                    cpassword: cpasswd,
-                    gender: gender
+            function execute() {
+                let url1 = "http://localhost:5000";
 
-                },
-                crossDomain: true,
-                success: function (res) {
-                    if (res.status !== 200) {
-                        console.log(res);
-                        // $("#message").text(res.message);
-                        // setTimeout(function () {
-                        //     window.location.reload(true);
-                        // }, 2000);
-                    }
+                var name = $("#userName").val();
+                var email = $("#email").val();
+                var phno = $("#phoneNumber").val();
+                var passwd = $("#password").val();
+                var cpasswd = $("#cpassword").val();
+                var gender = $("#gender").val();
 
-                    else if (res.status === 200) {
-                        console.log(res);
-                        // $("#message").text(res.message);
-                        window.localStorage.setItem('token', res.token);
-                        // window.location = "/verify";
-                    }
-
-                },
-                error: function (err) {
-                    console.log(err);
-                    alert(err);
+                if (name === "") {
+                    $("#userName").show();
+                    return;
                 }
 
+                if (email === "") {
+                    $("#email").show()
+                    return
+                }
 
-            });
-        }
+                if (phno === "") {
+                    $("#phoneNumber").show()
+                    return
+                }
+
+                if (passwd === "") {
+                    $("#password").show()
+                    return
+                }
+
+                if (cpasswd === "") {
+                    $("#cpassword").show()
+                    return
+                }
+
+                // if (phno.length != 10) {
+                //     $("#phoneNumber").show()
+                //     return
+                // }
+                $.ajax({
+                    url: url1 + "/signup",
+                    method: "POST",
+                    data: {
+                        userName: name,
+                        email: email,
+                        phone: phno,
+                        password: passwd,
+                        cpassword: cpasswd,
+                        gender: gender
+
+                    },
+                    crossDomain: true,
+                    success: function (res) {
+                        if (res.status !== 200) {
+                            console.log(res);
+                            $("#message").text(res.message);
+                            setTimeout(function () {
+                                window.location.reload(true);
+                            }, 2000);
+                        }
+
+                        else if (res.status === 200) {
+                            console.log(res);
+                            $("#message").text(res.message);
+                            window.localStorage.setItem('token', res.token);
+                            window.location = "verify.html";
+                        }
+
+                    },
+                    error: function (err) {
+                        console.log(err);
+                        alert(err);
+                    }
 
 
+                });
+            }
 
-    </script>
+        </script>
 
 </body>
 
