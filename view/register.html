@@ -19,10 +19,11 @@
     <!-- Meta tag Keywords -->
 
     <!-- css files -->
-    <link rel="stylesheet" href="css/login.css" type="text/css" media="all" />
+    <link rel="stylesheet" href="./css/login.css" type="text/css" media="all" />
     <!-- Style-CSS -->
-    <link href="css/font-awesome.min.css" rel="stylesheet">
+    <link href="./css/font-awesome.min.css" rel="stylesheet">
     <!-- Font-Awesome-Icons-CSS -->
+    <script src="https://code.jquery.com/jquery-3.4.1.js" crossorigin="anonymous"></script>
 
 </head>
 
@@ -53,45 +54,51 @@
             </div>
             <!-- vertical tabs -->
             <div class="vertical-tab">
-               
+
                 <div id="section2" class="section-w3ls">
                     <input type="radio" name="sections" id="option2" checked>
                     <label for="option2" class="icon-left-w3pvt"><span class="fa fa-pencil-square"
                             aria-hidden="true"></span>Register</label>
                     <article>
-                        <form action="#" method="post">
+                        <form action="" onsubmit=event.preventDefault()>
                             <h3 class="legend">Register Here</h3>
                             <div class="input">
                                 <span class="fa fa-user-o" aria-hidden="true"></span>
-                                <input type="text" placeholder="Username" name="name" required />
+                                <input type="text" placeholder="Username" name="userName" required id="userName" />
                             </div>
                             <div class="input">
                                 <span class="fa fa-key" aria-hidden="true"></span>
-                                <input type="password" placeholder="Password" name="password" required />
+                                <input type="password" placeholder="Password" name="password" required id="password" />
                             </div>
                             <div class="input">
                                 <span class="fa fa-key" aria-hidden="true"></span>
-                                <input type="password" placeholder="Confirm Password" name="password" required />
+                                <input type="password" placeholder="Confirm Password" name="cpassword" id="cpassword"
+                                    required />
                             </div>
 
                             <div class="input">
                                 <span class="fa fa-phone" aria-hidden="true"></span>
-                                <input type="text" placeholder="Phone Number" name="phoneNumber" required />
+                                <input type="text" placeholder="Phone Number" name="phoneNumber" id="phnumber"
+                                    required />
                             </div>
 
                             <div class="input">
                                 <span class="fa fa-envelope" aria-hidden="true"></span>
-                                <input type="text" placeholder="Email" name="email" required />
+                                <input type="text" placeholder="Email" name="email" required id="email" />
                             </div>
-                            <button type="submit" class="btn submit">Register</button>
+                            <button type="submit" class="btn submit" id="submit">Register</button>
+                            <br>
+                            <h4 id="msg" style="color: black;text-align: center;"></h4>
                         </form>
+
                     </article>
                 </div>
-           
+
             </div>
             <!-- //vertical tabs -->
             <div class="clear"></div>
         </div>
+        <br><br>
         <!-- copyright -->
         <div class="copyright">
             <h2>&copy; 2019 Registration Forms. All rights reserved |
@@ -99,6 +106,88 @@
         </div>
         <!-- //copyright -->
     </div>
+
+    <script>
+
+        $("#submit").click(function () {
+            let url = "http://localhost:5000";
+
+            var userName = $("#userName").val();
+            var email = $("#email").val();
+            var phno = $("#phnumber").val().trim();
+            var passwd = $("#password").val();
+            var cpasswd = $("#cpassword").val();
+
+            if (email === "") {
+                $("#email").show();
+                return;
+            }
+
+            if (userName === "") {
+                $("#userName").show();
+                return;
+            }
+
+            if (phno === "") {
+                $("#phnumber").show();
+                return;
+            }
+
+            if (passwd === "") {
+                $("#password").show();
+                return;
+            }
+
+            if (cpasswd === "") {
+                $("#cpassword").show();
+                return;
+            }
+
+            var n = phno.length;
+            if (n != 10) {
+                $("#msg").text("Phone number not equal to 10");
+                return;
+            }
+
+
+            $.ajax({
+                url: url + "/signup",
+                method: "POST",
+                data: {
+                    userName: name,
+                    email: email,
+                    phone: phno,
+                    password: passwd,
+                    cpassword: cpasswd
+
+                },
+                crossDomain: true,
+                success: function (res) {
+                    if (res.status !== 200) {
+                        console.log(res);
+                        $("#message").text(res.message);
+                        // setTimeout(function () {
+                        //     window.location.reload(true);
+                        // }, 2000);
+                    }
+
+                    else if (res.status === 200) {
+                        console.log(res);
+                        $("#message").text(res.message);
+                        window.localStorage.setItem('token', res.token);
+                        // window.location = "/verify";
+                    }
+
+                },
+                error: function (err) {
+                    console.log(err);
+                    alert(err);
+                }
+
+
+            });
+        });
+    </script>
 
 </body>
 
