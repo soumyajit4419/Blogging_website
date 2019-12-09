@@ -11,19 +11,24 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 
-app.use(viewRoutes);
+//app.use(viewRoutes);
+
+// app.use(function (req, res, next) {
+//     console.log("in the error page");
+//     res.status(404).sendFile(path.join(__dirname, 'view', '404.html'));
+// });
 app.use(authenticateRoute);
-app.use(function (req, res, next) {
-    console.log("in the error page");
-    res.status(404).sendFile(path.join(__dirname, 'view', '404.html'));
+app.get('/', function (req, res, next) {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+    console.log("in the blog page");
 });
 
+app.listen(5000);
 mongoose.connect('mongodb://localhost:27017/Blogs')
     .then(function (result) {
-        console.log("DataBaseConnected");
+        console.log("connected");
     })
     .catch(function (err) {
         console.log(err);
     });
 
-app.listen(5000);

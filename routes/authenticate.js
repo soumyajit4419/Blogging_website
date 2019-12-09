@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
-const users = require('../models/user');
+const User = require('../models/userRegistration');
 const { check, validationResult } = require('express-validator');
 
 router.post('/signup', [
@@ -44,26 +44,23 @@ router.post('/signup', [
     },
 
     function (req, res, next) {
-        const userName = req.body.Username;
+        const userName = req.body.userName;
         const email = req.body.email;
         const phoneNumber = req.body.phone;
         const password = req.body.password;
         const emailOTP = Math.floor(100000 + Math.random() * 900000).toString();
-        const myUser = new users({ userName: userName, email: email, phoneNumber: phoneNumber, password: password, emailOTP: emailOTP, isVerfied: false });
+        const newUser = new User({ userName: userName, email: email, phoneNumber: phoneNumber, password: password, emailOTP: emailOTP, isVerfied: false });
 
-        myUser.save(function (err, user) {
-            if (err) return res.json({ status: 500, message: "Error on the server" });
+        newUser.save(function (err, user) {
+            if (err) return res.json({ status: 500, message: "Error on the server", err: err });
             else {
                 let token = jwt.sign({ id: user._id }, 'blogsuser', { expiresIn: 180 });
                 return res.json({ status: 200, message: "User created", token: token });
             }
         });
 
-    });
-
-
-
-
+    }
+);
 
 
 module.exports = router;
