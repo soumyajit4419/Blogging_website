@@ -406,7 +406,7 @@ h6 {
 }
 
 .btn--red {
-  background: #ff4b5a;
+  background-color: #2464a0 !important;
 }
 
 .btn--red:hover {
