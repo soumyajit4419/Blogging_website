@@ -41,6 +41,8 @@
                     <li class="colorlib-active"><a href="profile.html">My Blogs</a></li>
                     <li><a href="addblog.html">Add Blogs</a></li>
                     <li><a href="update.html">Update Details</a></li>
+                    <button class="btn btn--radius-2" style="background-color: rgb(195, 50, 98);color: whitesmoke;"
+                        id="logout">LOGOUT</button>
                 </ul>
             </nav>
 
@@ -379,6 +381,13 @@
     <script src="./js/jquery.animateNumber.min.js"></script>
     <script src="./js/scrollax.min.js"></script>
     <script src="./js/main.js"></script>
+
+    <script>
+        $("#logout").click(function () {
+            localStorage.clear();
+            window.location = "travel.html";
+        })
+    </script>
 
 </body>
 
