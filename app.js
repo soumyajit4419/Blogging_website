@@ -3,6 +3,7 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const authenticateRoute = require('./routes/authenticate');
+const uploadRoute = require('./routes/fileUpload');
 const viewRoutes = require('./routes/view');
 const app = express();
 
@@ -12,12 +13,11 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 
 app.use(viewRoutes);
-
-// app.use(function (req, res, next) {
-//     console.log("in the error page");
-//     res.status(404).sendFile(path.join(__dirname, 'view', '404.html'));
-// });
 app.use(authenticateRoute);
+app.use(uploadRoute);
+
+
+
 
 app.listen(5000);
 mongoose.connect('mongodb://localhost:27017/Blogs')
