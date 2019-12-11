@@ -64,7 +64,8 @@
                     <div class="row d-flex">
                         <div class="col-md-12 d-flex">
 
-                            <form method="">
+                            <form action="/routes/authenticate/addPost" method="POST" enctype="multipart/form-data"
+                                onsubmit=event.preventDefault()>
                                 <br>
                                 <br>
                                 <h2 class="text-center">Enter the details of the post</h2>
@@ -91,11 +92,11 @@
                                     <div class="name">Upload Image</div>
                                     <div class="value">
                                         <div class="input-group js-input-file">
-                                            <input class="input-file" type="file" name="file_cv" id="file">
+                                            <input class="input-file" type="file" name="file" id="file">
                                             <label class="label--file" for="file">Choose file</label>
                                             <span class="input-file__info">No file chosen</span>
                                         </div>
-                                        <div class="label--desc">Upload your image or any other relevant file.
+                                        <div class="label--desc">Upload your image
                                             Max file size
                                             50 MB</div>
                                     </div>
@@ -103,7 +104,7 @@
                                 </div>
                                 <div class="text-center">
                                     <br>
-                                    <button class="btn btn--radius-2 btn--red" type="submit"
+                                    <button class="btn btn--radius-2 btn--red" type="submit" value="Upload"
                                         style="color: whitesmoke;">Post</button>
                                 </div>
 
@@ -143,6 +144,39 @@
             localStorage.clear();
             window.location = "travel.html";
         })
+
+        // function execute() {
+        //     let url1 = "http://localhost:5000";
+
+        //     $.ajax({
+        //         url: url1 + "/addPost",
+        //         headers: {
+        //             "access-token": localStorage.getItem("token")
+        //         },
+        //         method: "POST",
+        //         crossDomain: true,
+        //         success: function (res) {
+        //             if (res.status !== 200) {
+        //                 console.log(res);
+        //                 // $("#message").text(res.message);
+        //             }
+
+        //             else if (res.status === 200) {
+        //                 console.log(res);
+        //                 // $("#message").text(res.message);
+        //                 //window.localStorage.setItem('token', res.token);
+        //             }
+
+        //         },
+        //         error: function (err) {
+        //             console.log(err);
+        //             alert(err);
+        //         }
+
+
+        //     });
+        // }
+
     </script>
 
 </body>

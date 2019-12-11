@@ -1,8 +1,22 @@
 const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
+const path = require('path');
 const User = require('../models/userRegistration');
+const post = require('../models/allPosts');
 const { check, validationResult } = require('express-validator');
+const multer = require('multer');
+var storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, './upload/')
+    },
+    filename: function (req, file, cb) {
+        cb(null, file.fieldname + '-' + Date.now())
+    }
+})
+
+var upload = multer({ storage: storage })
+
 
 router.post('/signup', [
     check('email').isEmail(),
@@ -153,6 +167,15 @@ router.post('/verify', verifyToken, function (req, res, next) {
             }
         }
     })
+
+});
+
+router.post('/addPost', upload.single('file'), function (req, res, next) {
+    // const file = req.file;
+    // newPost = new post({ message: "a", imageName: file });
+    // newPost.save();
+    return res.json({ status: 200, message: "file uploaded" });
+
 
 });
 
