@@ -200,12 +200,17 @@ router.post('/upload', upload.single('file'), verifyToken, function (req, res, n
     const id = req.userId;
     User.findById(id, function (err, user) {
         if (err) {
-            return res.json({ status: 500, auth: false, message: 'Internal server error!', err: err });
+            return res.json({ status: 500, message: 'Internal server error!', err: err });
+        }
+        else if (!user) {
+            return res.json({ status: 422, message: 'no user found' });
         }
         else if (user) {
-            user.post.push({ imageName: file });
+            headline = req.body.headline;
+            message = req.body.message;
+            user.post.push({ headline: headline, message: message, imageName: file });
             user.save();
-            return res.json({ status: 200, message: "file uploaded sucessfully" });
+            return res.json({ status: 200, message: "post added successfully" });
         }
 
     });
@@ -213,22 +218,18 @@ router.post('/upload', upload.single('file'), verifyToken, function (req, res, n
 });
 
 
-router.post('/addPost', verifyToken, function (req, res, next) {
-    const id = req.userId;
-    User.findById(id, function (err, user) {
-        if (err) {
-            return res.json({ status: 500, auth: false, message: 'Internal server error!', err: err });
-        }
-        else if (user) {
-            headline = req.body.headline;
-            message = req.body.message;
-            user.post.push({ headline: headline, message: message });
-            user.save();
-            return res.json({ status: 200, message: "post added successfully" });
-        }
-    });
+// router.post('/addPost', verifyToken, function (req, res, next) {
+//     const id = req.userId;
+//     User.findById(id, function (err, user) {
+//         if (err) {
+//             return res.json({ status: 500, auth: false, message: 'Internal server error!', err: err });
+//         }
+//         else if (user) {
 
-})
+//         }
+//     });
+
+// })
 
 
 

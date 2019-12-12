@@ -63,7 +63,8 @@
                 <div class="container-fluid px-0">
                     <div class="row ">
                         <div class="col-md-10 ">
-                            <form onsubmit=event.preventDefault()>
+                            <form action="" id="PostForm" class="form-horizontal" method="" role="form"
+                                enctype="multipart/form-data" onsubmit=event.preventDefault()>
                                 <br>
                                 <br>
                                 <h2 class="text-center">Enter the details of the post</h2>
@@ -81,36 +82,28 @@
                                     <div class="name">Message</div>
                                     <div class="value">
                                         <div class="input-group">
-                                            <textarea class="textarea--style-6" name="message" id="message"
+                                            <textarea class="textarea--style-6" type="text" name="message" id="message"
                                                 placeholder="Enter any comment about the post" required></textarea>
                                         </div>
                                     </div>
                                 </div>
-                            </form>
-                            <form action="/upload" id="PostForm" class="form-horizontal" method="POST" role="form"
-                                enctype="multipart/form-data">
-
 
                                 <div class="form-group form-row">
                                     <label for="file" class="col-md-9 control-label name">Upload Image</label>
                                     <div class="col-md-9">
                                         <input type="file" class="form-control " name="file" required>
                                     </div>
-                                    <!-- Button -->
-                                    <div class=" col-md-2 text-center">
-                                        <input type="submit" name="submit" value="Upload" class="btn btn-primary"
-                                            id="fileUpload">
-                                    </div>
 
+                                </div>
+
+                                <div class=" col-md-2 text-center mx-auto">
+                                    <input type="submit" name="submit" value="Post" class="btn btn-primary"
+                                        id="fileUpload">
                                 </div>
                                 <h4 class="text-center" id="uploadMsg"></h4>
                             </form>
 
-                            <div class="text-center">
-                                <br>
-                                <button class="btn btn--radius-2 btn--red col-md-3" type="submit"
-                                    style="color: whitesmoke;" onclick="execute()">Post</button>
-                            </div>
+
 
 
 
@@ -152,14 +145,49 @@
         });
 
 
-
-        function execute() {
-            let url1 = "http://localhost:5000";
-
-            var headline = $("#headline").val();
-            var message = $("#message").val();
+        // function execute() {
+        //     let url1 = "http://localhost:5000";
 
 
+
+        //     $.ajax({
+        //         url: url1 + "/addPost",
+        //         headers: {
+        //             "access-token": localStorage.getItem("token")
+        //         },
+
+        //         crossDomain: true,
+        //         success: function (res) {
+        //             if (res.status !== 200) {
+        //                 console.log(res);
+        //                 // $("#message").text(res.message);
+        //                 // setTimeout(function () {
+        //                 //     window.location.reload(true);
+        //                 // }, 2000);
+        //             }
+
+        //             else if (res.status === 200) {
+        //                 console.log(res);
+        //                 // $("#message").text(res.message);
+        //                 //window.localStorage.setItem('token', res.token);
+        //                 // window.location = "login.html";
+        //             }
+
+        //         },
+        //         error: function (err) {
+        //             console.log(err);
+        //             alert(err);
+        //         }
+
+
+        //     });
+        // }
+
+
+        $('#PostForm').submit(function () {
+
+            var headline = $("#headline").val().toString();
+            var message = $("#message").val().toString();
             if (headline == "") {
                 $("#headline").show();
                 return;
@@ -169,53 +197,13 @@
                 $("#message").show();
                 return;
             }
-
-            $.ajax({
-                url: url1 + "/addPost",
+            $(this).ajaxSubmit({
+                url: url1 + "/upload",
                 headers: {
                     "access-token": localStorage.getItem("token")
                 },
                 method: "POST",
-                data: {
-                    headline: headline,
-                    message: message
-
-                },
                 crossDomain: true,
-                success: function (res) {
-                    if (res.status !== 200) {
-                        console.log(res);
-                        // $("#message").text(res.message);
-                        // setTimeout(function () {
-                        //     window.location.reload(true);
-                        // }, 2000);
-                    }
-
-                    else if (res.status === 200) {
-                        console.log(res);
-                        // $("#message").text(res.message);
-                        //window.localStorage.setItem('token', res.token);
-                        // window.location = "login.html";
-                    }
-
-                },
-                error: function (err) {
-                    console.log(err);
-                    alert(err);
-                }
-
-
-            });
-        }
-
-
-
-        $('#PostForm').submit(function () {
-            $(this).ajaxSubmit({
-
-                headers: {
-                    "access-token": localStorage.getItem("token")
-                },
                 error: function (err) {
                     console.log(err);
                 },
