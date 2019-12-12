@@ -387,6 +387,25 @@
             localStorage.clear();
             window.location = "travel.html";
         })
+
+        var url1 = "http://localhost:5000";
+        $.ajax({
+            url: url1 + "/getAllPosts",
+            method: "GET",
+            headers: {
+                "access-token": localStorage.getItem("token")
+            },
+            crossDomain: true,
+            success: function (res) {
+                console.log(res);
+
+            },
+            error: function (err) {
+                console.log(err);
+            }
+
+        });
+
     </script>
 
 </body>

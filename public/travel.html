@@ -390,6 +390,25 @@
 	<script src="./js/scrollax.min.js"></script>
 	<script src="./js/main.js"></script>
 
+	<script>
+		var url1 = "http://localhost:5000";
+		$.ajax({
+			url: url1 + "/getAllPosts",
+			method: "GET",
+
+			crossDomain: true,
+			success: function (res) {
+				console.log(res);
+
+			},
+			error: function (err) {
+				console.log(err);
+			}
+
+		});
+	</script>
+
+
 </body>
 
 </html>

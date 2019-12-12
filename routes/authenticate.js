@@ -3,6 +3,7 @@ const router = express.Router();
 const jwt = require('jsonwebtoken');
 const path = require('path');
 const User = require('../models/userRegistration');
+const Posts = require('../models/allPosts');
 const { check, validationResult } = require('express-validator');
 
 const multer = require('multer');
@@ -172,8 +173,6 @@ router.post('/verify', verifyToken, function (req, res, next) {
 
 });
 
-
-
 router.get("/getUserState", verifyToken, function (req, res) {
     const userId = req.userId;
     async function getState() {
@@ -206,10 +205,16 @@ router.post('/upload', upload.single('file'), verifyToken, function (req, res, n
             return res.json({ status: 422, message: 'no user found' });
         }
         else if (user) {
-            headline = req.body.headline;
-            message = req.body.message;
+            const headline = req.body.headline;
+            const message = req.body.message;
+            const userName = user.userName;
+
             user.post.push({ headline: headline, message: message, imageName: file });
             user.save();
+
+            var newPosts = new Posts({ headline: headline, message: message, imageName: file, userName: userName });
+            newPosts.save();
+
             return res.json({ status: 200, message: "post added successfully" });
         }
 
@@ -217,21 +222,28 @@ router.post('/upload', upload.single('file'), verifyToken, function (req, res, n
 
 });
 
+router.get('/getAllPosts', function (req, res, next) {
+    async function getall() {
+        User.find({}, function (err, user) {
+            if (err) {
+                return res.json({ status: 500, message: 'Internal server error!', err: err });
+            }
+            else if (user) {
 
-// router.post('/addPost', verifyToken, function (req, res, next) {
-//     const id = req.userId;
-//     User.findById(id, function (err, user) {
-//         if (err) {
-//             return res.json({ status: 500, auth: false, message: 'Internal server error!', err: err });
-//         }
-//         else if (user) {
+                for (i = 0; i < user.length; i++) {
+                    for (j = 0; j < user[i].post.length; j++) {
 
-//         }
-//     });
-
-// })
+                    }
+                }
 
 
+            }
+
+        })
+    }
+
+    getall();
+});
 
 function verifyToken(req, res, next) {
     const token = req.headers['access-token'];
