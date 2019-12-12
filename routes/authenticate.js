@@ -224,22 +224,37 @@ router.post('/upload', upload.single('file'), verifyToken, function (req, res, n
 
 router.get('/getAllPosts', function (req, res, next) {
     async function getall() {
-        User.find({}, function (err, user) {
+        Posts.find({}, function (err, post) {
+            if (err) {
+                return res.json({ status: 500, message: 'Internal server error!', err: err });
+            }
+            else if (post) {
+                return res.json(post);
+
+            }
+
+        });
+    }
+
+    getall();
+});
+
+
+
+router.get('/getUserPosts', verifyToken, function (req, res, next) {
+    async function getall() {
+
+        const id = req.userId;
+        User.findById(id, function (err, user) {
             if (err) {
                 return res.json({ status: 500, message: 'Internal server error!', err: err });
             }
             else if (user) {
-
-                for (i = 0; i < user.length; i++) {
-                    for (j = 0; j < user[i].post.length; j++) {
-
-                    }
-                }
-
+                return res.json(user.post);
 
             }
-
         })
+
     }
 
     getall();
