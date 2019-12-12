@@ -3,8 +3,20 @@ const router = express.Router();
 const jwt = require('jsonwebtoken');
 const path = require('path');
 const User = require('../models/userRegistration');
-const post = require('../models/allPosts');
 const { check, validationResult } = require('express-validator');
+
+const multer = require('multer');
+var storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, './public/uploads/')
+    },
+    filename: function (req, file, cb) {
+        cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
+    }
+});
+
+var upload = multer({ storage: storage })
+
 
 
 
@@ -70,7 +82,7 @@ router.post('/signup', [
         newUser.save(function (err, user) {
             if (err) return res.json({ status: 500, message: "internal server error", err: err });
             else {
-                let token = jwt.sign({ id: user._id }, 'blogsuser', { expiresIn: 180 });
+                let token = jwt.sign({ id: user._id }, 'blogsuser', { expiresIn: 86400 });
                 return res.json({ status: 200, message: "User created", token: token });
             }
         });
@@ -122,7 +134,7 @@ router.post('/login',
             }
             else if (user) {
                 if (user.password === password) {
-                    const token = jwt.sign({ id: user._id }, 'blogsuser', { expiresIn: 180 });
+                    const token = jwt.sign({ id: user._id }, 'blogsuser', { expiresIn: 86400 });
                     return res.json({ status: 200, message: "User sucessfully loggedin", token: token });
                 }
                 else if (user.password !== password) {
@@ -182,6 +194,42 @@ router.get("/getUserState", verifyToken, function (req, res) {
     }
     getState();
 });
+
+router.post('/upload', upload.single('file'), verifyToken, function (req, res, next) {
+    var file = req.file.filename;
+    const id = req.userId;
+    User.findById(id, function (err, user) {
+        if (err) {
+            return res.json({ status: 500, auth: false, message: 'Internal server error!', err: err });
+        }
+        else if (user) {
+            user.post.push({ imageName: file });
+            user.save();
+            return res.json({ status: 200, message: "file uploaded sucessfully" });
+        }
+
+    });
+
+});
+
+
+router.post('/addPost', verifyToken, function (req, res, next) {
+    const id = req.userId;
+    User.findById(id, function (err, user) {
+        if (err) {
+            return res.json({ status: 500, auth: false, message: 'Internal server error!', err: err });
+        }
+        else if (user) {
+            headline = req.body.headline;
+            message = req.body.message;
+            user.post.push({ headline: headline, message: message });
+            user.save();
+            return res.json({ status: 200, message: "post added successfully" });
+        }
+    });
+
+})
+
 
 
 function verifyToken(req, res, next) {

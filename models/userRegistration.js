@@ -3,6 +3,13 @@ const mongoose = require('mongoose');
 
 const schema = mongoose.Schema;
 
+
+const postSchema = new schema({
+    headline: { type: String },
+    message: { type: String },
+    imageName: { type: String }
+})
+
 const userSchema = new schema({
     userName: { type: String, required: true },
     password: { type: String, required: true },
@@ -10,7 +17,8 @@ const userSchema = new schema({
     phoneNumber: { type: String, required: true },
     isVerified: { type: Boolean, default: false },
     emailOTP: { type: Number },
-    gender:{type:String,required:true}
+    gender: { type: String, required: true },
+    post: { type: [postSchema] }
 
 });
 
