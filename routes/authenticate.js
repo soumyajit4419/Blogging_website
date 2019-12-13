@@ -224,7 +224,7 @@ router.post('/upload', upload.single('file'), verifyToken, function (req, res, n
 
 router.get('/getAllPosts', function (req, res, next) {
     async function getall() {
-        Posts.find({}, function (err, post) {
+        await Posts.find({}, function (err, post) {
             if (err) {
                 return res.json({ status: 500, message: 'Internal server error!', err: err });
             }
@@ -242,10 +242,10 @@ router.get('/getAllPosts', function (req, res, next) {
 
 
 router.get('/getUserPosts', verifyToken, function (req, res, next) {
-    async function getall() {
+    async function getallP() {
 
         const id = req.userId;
-        User.findById(id, function (err, user) {
+        await User.findById(id, function (err, user) {
             if (err) {
                 return res.json({ status: 500, message: 'Internal server error!', err: err });
             }
@@ -257,7 +257,7 @@ router.get('/getUserPosts', verifyToken, function (req, res, next) {
 
     }
 
-    getall();
+    getallP();
 });
 
 function verifyToken(req, res, next) {
