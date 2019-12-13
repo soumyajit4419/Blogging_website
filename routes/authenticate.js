@@ -250,7 +250,7 @@ router.get('/getUserPosts', verifyToken, function (req, res, next) {
                 return res.json({ status: 500, message: 'Internal server error!', err: err });
             }
             else if (user) {
-                return res.json(user.post);
+                return res.json({ post: user.post, userName: user.userName });
 
             }
         })
