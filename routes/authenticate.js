@@ -19,8 +19,6 @@ var storage = multer.diskStorage({
 var upload = multer({ storage: storage })
 
 
-
-
 router.post('/signup', [
     check('email').isEmail(),
     check('password').isLength({ min: 5 })],
@@ -100,7 +98,7 @@ router.post('/login',
                 return res.json({ status: 500, message: "internal server error", err: err });
             }
             else if (!user) {
-                return res.json({ status: 422, message: "user name not found" });
+                return res.json({ status: 422, message: "user name not found,Wrong" });
             }
             else if (user) {
                 next();
@@ -194,6 +192,59 @@ router.get("/getUserState", verifyToken, function (req, res) {
     getState();
 });
 
+router.post('/updatePassword', [check('password').isLength({ min: 5 })], function (req, res, next) {
+    const error = validationResult(req);
+    if (!error.isEmpty()) {
+        return res.json({ status: 415, message: 'password length less than 5' });
+    }
+    else {
+        next();
+    }
+
+},
+    function (req, res, next) {
+        const userName = req.body.userName;
+        User.findOne({ userName: userName }, function (err, user) {
+            if (err) {
+                return res.json({ status: 500, message: 'internal server error', err: err });
+            }
+            else if (!user) {
+                return res.json({ status: 415, message: 'no user found,invalid user name' });
+            }
+            else {
+                next();
+            }
+        })
+
+    },
+    function (req, res, next) {
+        const password = req.body.password;
+        const cpassword = req.body.cpassword;
+        if (password === cpassword) {
+            next();
+        }
+        else {
+            return res.json({ status: 415, message: 'password and confirm password dint match' });
+        }
+    },
+    function (req, res, next) {
+        const userName = req.body.userName;
+        User.findOne({ userName: userName }, function (err, user) {
+            if (err) {
+                return res.json({ status: 500, message: 'internal server error', err: err });
+            }
+            else if (user) {
+                const password = req.body.password;
+                user.password = password;
+                user.save();
+                return res.json({ status: 200, message: 'password updated sucessfully' });
+            }
+
+        })
+    }
+
+)
+
 router.post('/upload', upload.single('file'), verifyToken, function (req, res, next) {
     var file = req.file.filename;
     const id = req.userId;
@@ -222,6 +273,7 @@ router.post('/upload', upload.single('file'), verifyToken, function (req, res, n
 
 });
 
+
 router.get('/getAllPosts', function (req, res, next) {
     async function getall() {
         await Posts.find({}, function (err, post) {
@@ -239,7 +291,21 @@ router.get('/getAllPosts', function (req, res, next) {
     getall();
 });
 
+router.get('/getUserName', verifyToken, function (req, res, next) {
+    const id = req.userId;
+    User.findById(id, function (err, user) {
+        if (err) {
+            return res.json({ status: 500, message: 'Internal server error!', err: err });
+        }
+        else if (!user) {
+            return res.json({ status: 422, message: 'no user found' });
+        }
+        else if (user) {
+            return res.json({ userName: user.userName });
+        }
 
+    });
+})
 
 router.get('/getUserPosts', verifyToken, function (req, res, next) {
     async function getallP() {
@@ -259,6 +325,8 @@ router.get('/getUserPosts', verifyToken, function (req, res, next) {
 
     getallP();
 });
+
+
 
 function verifyToken(req, res, next) {
     const token = req.headers['access-token'];

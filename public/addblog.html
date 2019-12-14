@@ -40,15 +40,15 @@
                     <li><a href="travel.html">Home</a></li>
                     <li><a href="profile.html">My Blogs</a></li>
                     <li class="colorlib-active"><a href="addblog.html">Add Blog</a></li>
-                    <li><a href="update.html">Update Details</a></li>
+                    <li><a href="updateDetail.html">Update Details</a></li>
                     <button class="btn btn--radius-2" style="background-color: rgb(195, 50, 98);color: whitesmoke;"
                         id="logout">LOGOUT</button>
                 </ul>
             </nav>
 
             <div class="colorlib-footer">
-                <h1 id="colorlib-logo" class="mb-5"><a href="" style="background-image: url(images/bg_1.jpg);">Soumyajit
-                        <span></span></a></h1>
+                <h1 id="colorlib-logo" class="mb-5"><a href="" style="background-image: url(images/bg_1.jpg);">
+                        <span id="nameAdd"></span></a></h1>
                 <p class="pfooter">
                     <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
                     Copyright &copy;
@@ -150,9 +150,24 @@
 
         function btnshow() {
             window.location.reload();
-
         }
+        $.ajax({
+            url: url1 + "/getUserName",
+            method: "GET",
+            headers: {
+                "access-token": localStorage.getItem("token")
+            },
+            crossDomain: true,
+            success: function (res) {
+                console.log(res);
+                $("#nameAdd").text(res.userName);
 
+            },
+            error: function (err) {
+                console.log(err);
+            }
+
+        });
 
         $('#PostForm').submit(function () {
 

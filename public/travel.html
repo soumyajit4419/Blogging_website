@@ -113,10 +113,24 @@
 				crossDomain: true,
 				success: function (res) {
 					console.log(res);
-					for (i = 0; i < res.length; i++) {
-						$("#main").append(`<div class="col-md-12">
+					if (res.length === 0) {
+						$("#main").append(`    <div class="col-md-12">
+                                    <div class="blog-entry-2">
+                                        <div class="text">
+                                            <div class=" align-items-center">
+                                                <h1 class="mb-4 text-center">s0RRY nO User has P0sted anything....</h1>
+                                                <h3 class="mb-4 text-center">Login and post something to see</h3>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>`);
+
+					}
+					else {
+						for (i = 0; i < res.length; i++) {
+							$("#main").append(`<div class="col-md-12">
 													<div class="blog-entry-2">
-														<a href="single.html" class="img"
+														<a href="" class="img"
 															style="background-image: url(uploads/${res[i].imageName});"></a>
 														<div class="text pt-4">
 															<h3 class="mb-4"><a href="#">${res[i].headline}</a></h3>
@@ -143,6 +157,7 @@
 													</div>
 												</div>`)
 
+						}
 					}
 
 				},

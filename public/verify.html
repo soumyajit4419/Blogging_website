@@ -54,14 +54,16 @@
                         <button class="btn btn--pill btn--purple "><a href="travel.html" class="btn--purple">Return to
                                 home</a></button>
                     </div>
+                    <br>
+                    <div class="p-t-10 text-center" id="onerrorshow" style="color:white;">
+                        <h5 class="" style="color: whitesmoke;"></h5>
+                    </div>
                 </div>
 
             </div>
         </div>
     </div>
 
-    <!-- Jquery JS-->
-    <script src="./vendor/jquery/jquery.min.js"></script>
     <!-- Vendor JS-->
     <script src="./vendor/select2/select2.min.js"></script>
     <script src="./vendor/datepicker/moment.min.js"></script>
@@ -94,7 +96,7 @@
                 success: function (res) {
                     if (res.status !== 200) {
                         console.log(res);
-                        // $("#message").text(res.message);
+                        $("#onerrorshow").text(res.message);
                         setTimeout(function () {
                             window.location.reload(true);
                         }, 2000);

@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    <title>User Profile </title>
+    <title>Update personal details</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
@@ -23,7 +23,7 @@
 
     <link rel="stylesheet" href="./css/bootstrap-datepicker.css">
     <link rel="stylesheet" href="./css/jquery.timepicker.css">
-
+    <link href="./css/profile.css" rel="stylesheet" media="all">
 
     <link rel="stylesheet" href="./css/flaticon.css">
     <link rel="stylesheet" href="./css/icomoon.css">
@@ -38,17 +38,17 @@
             <nav id="colorlib-main-menu" role="navigation">
                 <ul>
                     <li><a href="travel.html">Home</a></li>
-                    <li class="colorlib-active"><a href="profile.html">My Blogs</a></li>
-                    <li><a href="addblog.html">Add Blogs</a></li>
-                    <li><a href="updateDetail.html">Update Details</a></li>
+                    <li><a href="profile.html">My Blogs</a></li>
+                    <li><a href="addblog.html">Add Blog</a></li>
+                    <li class="colorlib-active"><a href="updateDetail.html">Update Details</a></li>
                     <button class="btn btn--radius-2" style="background-color: rgb(195, 50, 98);color: whitesmoke;"
                         id="logout">LOGOUT</button>
                 </ul>
             </nav>
 
             <div class="colorlib-footer">
-                <h1 id="colorlib-logo" class="mb-4"><a href="" style="background-image: url(images/bg_1.jpg);">
-                        <span id="nameAdd"> </span></a></h1>
+                <h1 id="colorlib-logo" class="mb-5"><a href="" style="background-image: url(images/bg_1.jpg);">
+                        <span id="nameAdd"></span></a></h1>
                 <p class="pfooter">
                     <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
                     Copyright &copy;
@@ -59,36 +59,19 @@
             </div>
         </aside> <!-- END COLORLIB-ASIDE -->
         <div id="colorlib-main">
-            <section class="ftco-section ftco-no-pt ftco-no-pb">
-                <div class="container">
-                    <div class="row d-flex">
-                        <div class="col-xl-10 px-md-5 py-5">
-                            <h1 id="colorlib-logo" class="mb-5 text-center"><a href="">USER BLOGS
-                                    <span></span></a></h1>
-                            <div class="row pt-md-4" id="main">
+            <section class="ftco-about img ftco-section ftco-no-pt ftco-no-pb" id="about-section">
+                <div class="container-fluid px-0">
+                    <div class="row ">
+                        <div class="col-md-10 ">
 
-                            </div><!-- END-->
-                            <!-- <div class="row">
-                                <div class="col">
-                                    <div class="block-27">
-                                        <ul>
-                                            <li><a href="#">&lt;</a></li>
-                                            <li class="active"><span>1</span></li>
-                                            <li><a href="#">2</a></li>
-                                            <li><a href="#">3</a></li>
-                                            <li><a href="#">4</a></li>
-                                            <li><a href="#">5</a></li>
-                                            <li><a href="#">&gt;</a></li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div> -->
+                            <br>
+
                         </div>
                     </div>
                 </div>
             </section>
-        </div><!-- END COLORLIB-MAIN -->
-    </div><!-- END COLORLIB-PAGE -->
+        </div>
+    </div>
 
     <!-- loader -->
     <div id="ftco-loader" class="show fullscreen"><svg class="circular" width="48px" height="48px">
@@ -110,16 +93,17 @@
     <script src="./js/jquery.animateNumber.min.js"></script>
     <script src="./js/scrollax.min.js"></script>
     <script src="./js/main.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery.form/3.51/jquery.form.min.js"></script>
 
     <script>
+        var url1 = "http://localhost:5000";
         $("#logout").click(function () {
             localStorage.clear();
             window.location = "travel.html";
-        })
+        });
 
-        var url1 = "http://localhost:5000";
         $.ajax({
-            url: url1 + "/getUserPosts",
+            url: url1 + "/getUserName",
             method: "GET",
             headers: {
                 "access-token": localStorage.getItem("token")
@@ -127,57 +111,17 @@
             crossDomain: true,
             success: function (res) {
                 console.log(res);
-                console.log(res.post);
+                $("#nameAdd").text(res.userName);
 
-                if (res.post.length === 0) {
-                    $("#nameAdd").text(res.userName);
-                    $("#main").append(`    <div class="col-md-12">
-                                    <div class="blog-entry-2">
-                                        <div class="text">
-                                            <div class=" align-items-center">
-                                                <h1 class="mb-4 text-center">s0RRY nO pOst Found....</h1>
-                                                <h3 class="mb-4 text-center">Login and post something to see</h3>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>`);
-                }
-
-                else {
-                    $("#nameAdd").text(res.userName);
-                    for (i = 0; i < res.post.length; i++) {
-                        $("#main").append(`<div class="col-md-12">
-													<div class="blog-entry-2">
-														<a href="" class="img"
-															style="background-image: url(uploads/${res.post[i].imageName});"></a>
-														<div class="text pt-4">
-															<h3 class="mb-4"><a href="#">${res.post[i].headline}</a></h3>
-															<p class="mb-4">${res.post[i].message}</p>
-															<div class="meta-wrap d-md-flex align-items-center">
-																<div class="half order-md-last text-md-right">
-																	<p class="meta">
-																		<span><i class="icon-heart"></i>3</span>
-																		<span><i class="icon-eye"></i>100</span>
-																		<span><i class="icon-comment"></i>5</span>
-																	</p>
-																</div>
-																
-															</div>
-														</div>
-													</div>
-												</div>`)
-
-                    }
-
-                }
             },
-
-
             error: function (err) {
                 console.log(err);
             }
 
         });
+
+
+
 
     </script>
 
