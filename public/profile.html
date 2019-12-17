@@ -85,6 +85,8 @@
                             </div> -->
                         </div>
                     </div>
+                    <div id="message">
+                    </div>
                 </div>
             </section>
         </div><!-- END COLORLIB-MAIN -->
@@ -164,6 +166,11 @@
 																
 															</div>
 														</div>
+                                                        <div class="text-center">
+                                                         <button class="btn btn--radius-1 text-center"
+                                                             style="background-color: rgb(39, 37, 38);color: whitesmoke;"
+                                                          id="${res.post[i]._id}" onclick="deletePost(this.id)">Delete Post</button>
+                                                         </div>
 													</div>
 												</div>`)
 
@@ -178,6 +185,42 @@
             }
 
         });
+
+        function deletePost(idVal) {
+
+            console.log(idVal);
+            $.ajax({
+                url: url1 + "/deletePost",
+                method: "POST",
+                headers: {
+                    "access-token": localStorage.getItem("token")
+                },
+                data: {
+                    postId: idVal
+                },
+                crossDomain: true,
+                success: function (res) {
+                    console.log(res);
+                    if (res.status === 200) {
+                        $("#message").text(res.message);
+                        setTimeout(function () {
+                            window.location.reload(true);
+                        }, 5000);
+                    }
+                    else {
+                        $("#message").text(res.message)
+                    }
+
+                },
+                error: function (err) {
+                    console.log(err);
+                    alert(err);
+                }
+
+
+            });
+
+        }
 
     </script>
 

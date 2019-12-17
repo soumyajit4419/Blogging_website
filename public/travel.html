@@ -113,6 +113,7 @@
 				crossDomain: true,
 				success: function (res) {
 					console.log(res);
+
 					if (res.length === 0) {
 						$("#main").append(`    <div class="col-md-12">
                                     <div class="blog-entry-2">
@@ -127,20 +128,24 @@
 
 					}
 					else {
-						for (i = 0; i < res.length; i++) {
-							$("#main").append(`<div class="col-md-12">
+						for (i = 0; i < res.post.length; i++) {
+							// console.log(res.post[i].length);
+							var p = res.post[i];
+							// console.log(p.length);
+							for (j = 0; j < res.post[i].length; j++) {
+								$("#main").append(`<div class="col-md-12">
 													<div class="blog-entry-2">
 														<a href="" class="img"
-															style="background-image: url(uploads/${res[i].imageName});"></a>
+															style="background-image: url(uploads/${p[j].imageName});"></a>
 														<div class="text pt-4">
-															<h3 class="mb-4"><a href="#">${res[i].headline}</a></h3>
-															<p class="mb-4">${res[i].message}</p>
+															<h3 class="mb-4"><a href="#">${p[j].headline}</a></h3>
+															<p class="mb-4">${p[j].message}</p>
 															<div class="author mb-4 d-flex align-items-center">
 																<a href="#" class="img"
 																	style="background-image: url(images/person_1.jpg);"></a>
 																<div class="ml-3 info">
 																	<span>Written by</span>
-																	<h3><a href="#">${res[i].userName}</a>, <span>June 28, 2019</span></h3>
+																	<h3><a href="#">${res.userName[i]}</a>, <span>June 28, 2019</span></h3>
 																</div>
 															</div>
 															<div class="meta-wrap d-md-flex align-items-center">
@@ -157,6 +162,7 @@
 													</div>
 												</div>`)
 
+							}
 						}
 					}
 

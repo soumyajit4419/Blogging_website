@@ -3,7 +3,7 @@ const router = express.Router();
 const jwt = require('jsonwebtoken');
 const path = require('path');
 const User = require('../models/userRegistration');
-const Posts = require('../models/allPosts');
+// const Posts = require('../models/allPosts');
 const { check, validationResult } = require('express-validator');
 
 const multer = require('multer');
@@ -245,6 +245,28 @@ router.post('/updatePassword', [check('password').isLength({ min: 5 })], functio
 
 )
 
+router.post('/deletePost', verifyToken, function (req, res, next) {
+    const id = req.userId;
+    User.findById(id, function (err, user) {
+        if (err) {
+            return res.json({ status: 500, message: 'Internal server error!', err: err });
+        }
+        else if (!user) {
+            return res.json({ status: 422, message: 'no user found' });
+        }
+        else if (user) {
+            const postId = req.body.postId;
+            for (i = 0; i < user.post.length; i++) {
+                if (user.post[i]._id == postId) {
+                    user.post[i].remove();
+                    user.save();
+                    return res.json({ status: 200, message: 'post deleted successfully' });
+                }
+            }
+        }
+    })
+
+})
 router.post('/upload', upload.single('file'), verifyToken, function (req, res, next) {
     var file = req.file.filename;
     const id = req.userId;
@@ -276,19 +298,27 @@ router.post('/upload', upload.single('file'), verifyToken, function (req, res, n
 
 router.get('/getAllPosts', function (req, res, next) {
     async function getall() {
-        await Posts.find({}, function (err, post) {
+        await User.find({}, function (err, user) {
             if (err) {
                 return res.json({ status: 500, message: 'Internal server error!', err: err });
             }
-            else if (post) {
-                return res.json(post);
+            else if (user) {
+                var userPost = [];
+                var userData = [];
+                user.forEach(function (value, array) {
+                    // console.log(value);
+                    userData.push(value.userName);
+                    userPost.push(value.post);
+                });
 
+                // console.log(userData);
+                return res.json({ post: userPost, userName: userData });
             }
 
         });
     }
-
     getall();
+
 });
 
 router.get('/getUserName', verifyToken, function (req, res, next) {
@@ -301,7 +331,7 @@ router.get('/getUserName', verifyToken, function (req, res, next) {
             return res.json({ status: 422, message: 'no user found' });
         }
         else if (user) {
-            return res.json({ userName: user.userName });
+            return res.json({ userName: user.userName, email: user.email });
         }
 
     });
