@@ -3,8 +3,8 @@ const router = express.Router();
 const jwt = require('jsonwebtoken');
 const path = require('path');
 const User = require('../models/userRegistration');
-// const Posts = require('../models/allPosts');
 const { check, validationResult } = require('express-validator');
+const request = require('request');
 
 const multer = require('multer');
 var storage = multer.diskStorage({
@@ -22,7 +22,7 @@ var upload = multer({ storage: storage })
 router.post('/signup', [
     check('email').isEmail(),
     check('password').isLength({ min: 5 })],
-
+    verifyCaptcha,
     function (req, res, next) {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
@@ -89,7 +89,7 @@ router.post('/signup', [
     }
 );
 
-router.post('/login',
+router.post('/login', verifyCaptcha,
     function (req, res, next) {
         const userName = req.body.userName;
         const password = req.body.password;
@@ -144,7 +144,7 @@ router.post('/login',
     }
 );
 
-router.post('/verify', verifyToken, function (req, res, next) {
+router.post('/verify', verifyCaptcha, verifyToken, function (req, res, next) {
     const id = req.userId;
     User.findById(id, function (err, user) {
         if (err) {
@@ -192,7 +192,7 @@ router.get("/getUserState", verifyToken, function (req, res) {
     getState();
 });
 
-router.post('/updatePassword', [check('password').isLength({ min: 5 })], function (req, res, next) {
+router.post('/updatePassword', verifyCaptcha, [check('password').isLength({ min: 5 })], function (req, res, next) {
     const error = validationResult(req);
     if (!error.isEmpty()) {
         return res.json({ status: 415, message: 'password length less than 5' });
@@ -297,28 +297,24 @@ router.post('/upload', upload.single('file'), verifyToken, function (req, res, n
 
 
 router.get('/getAllPosts', function (req, res, next) {
-    async function getall() {
-        await User.find({}, function (err, user) {
-            if (err) {
-                return res.json({ status: 500, message: 'Internal server error!', err: err });
-            }
-            else if (user) {
-                var userPost = [];
-                var userData = [];
-                user.forEach(function (value, array) {
-                    // console.log(value);
-                    userData.push(value.userName);
-                    userPost.push(value.post);
-                });
+    User.find({}, function (err, user) {
+        if (err) {
+            return res.json({ status: 500, message: 'Internal server error!', err: err });
+        }
+        else if (user) {
+            var userPost = [];
+            var userData = [];
+            user.forEach(function (value, array) {
+                // console.log(value);
+                userData.push(value.userName);
+                userPost.push(value.post);
+            });
 
-                // console.log(userData);
-                return res.json({ post: userPost, userName: userData });
-            }
+            // console.log(userData);
+            return res.json({ post: userPost, userName: userData });
+        }
 
-        });
-    }
-    getall();
-
+    });
 });
 
 router.get('/getUserName', verifyToken, function (req, res, next) {
@@ -338,22 +334,18 @@ router.get('/getUserName', verifyToken, function (req, res, next) {
 })
 
 router.get('/getUserPosts', verifyToken, function (req, res, next) {
-    async function getallP() {
 
-        const id = req.userId;
-        await User.findById(id, function (err, user) {
-            if (err) {
-                return res.json({ status: 500, message: 'Internal server error!', err: err });
-            }
-            else if (user) {
-                return res.json({ post: user.post, userName: user.userName });
+    const id = req.userId;
+    User.findById(id, function (err, user) {
+        if (err) {
+            return res.json({ status: 500, message: 'Internal server error!', err: err });
+        }
+        else if (user) {
+            return res.json({ post: user.post, userName: user.userName });
 
-            }
-        })
+        }
+    })
 
-    }
-
-    getallP();
 });
 
 
@@ -375,5 +367,40 @@ function verifyToken(req, res, next) {
 
         })
     }
+}
+
+function verifyCaptcha(req, res, next) {
+    const captchaToken = req.body.captchaToken;
+    if (!captchaToken) {
+        return res.json({ status: 422, message: "captcha required" });
+    }
+    else {
+        // console.log(captchaToken);
+        request({
+            url: "https://www.google.com/recaptcha/api/siteverify",
+            method: "POST",
+            form: {
+                secret: "6LcM-ckUAAAAALU_hDY3E4AXUH3eUee26wksbqVq",
+                response: captchaToken,
+            }
+        }, function (err, response, body) {
+            if (err) {
+                return res.json({ status: 500, message: "internal server error", err: err });
+            }
+            else if (body) {
+                let bodyJson = JSON.parse(body);
+                // console.log(bodyJson);
+                // console.log(bodyJson.success);
+                if (bodyJson.success == false) {
+                    return res.json({ status: 422, message: "falied to validate capcha" });
+                }
+                else if (bodyJson.success == true) {
+                    next();
+                }
+            }
+        });
+
+    }
+
 }
 module.exports = router;

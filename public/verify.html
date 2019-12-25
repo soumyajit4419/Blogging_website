@@ -25,6 +25,8 @@
 
     <!-- Main CSS-->
     <link href="./css/main.css" rel="stylesheet" media="all">
+
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </head>
 
 <body>
@@ -48,6 +50,9 @@
                             <input class="input--style-3" type="text" placeholder="Email otp" name="otp" id="otp"
                                 required>
                         </div>
+                        <div class="g-recaptcha" data-sitekey=6LcM-ckUAAAAAOWdRKefqgT9K_kpzE9LJCZDkDVN data-theme=dark>
+                        </div>
+                        <p id="sCaptcha" style="color : red">Captcha is required</p>
 
 
                         <div class="p-t-10 text-center">
@@ -78,6 +83,7 @@
     <script src="./js/global.js"></script>
 
     <script>
+        $("#sCaptcha").hide();
         let url1 = "http://localhost:5000";
         $.ajax({
             url: url1 + "/getUserName",
@@ -99,12 +105,18 @@
 
         function execute() {
 
+            var captcha = grecaptcha.getResponse();
 
+            if (captcha == "") {
+                $("#sCaptcha").show();
+                return;
+            }
             var otp = $("#otp").val();
             if (otp == "") {
                 $("#otp").show();
                 return;
             }
+
 
             $.ajax({
                 url: url1 + "/verify",
@@ -113,7 +125,8 @@
                 },
                 method: "POST",
                 data: {
-                    otp: otp
+                    otp: otp,
+                    captchaToken: captcha
                 },
                 crossDomain: true,
                 success: function (res) {

@@ -24,6 +24,8 @@
 
     <!-- Main CSS-->
     <link href="./css/main.css" rel="stylesheet" media="all">
+
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </head>
 
 <body>
@@ -48,6 +50,9 @@
                                 id="password" required>
                         </div>
 
+                        <div class="g-recaptcha" data-sitekey=6LcM-ckUAAAAAOWdRKefqgT9K_kpzE9LJCZDkDVN data-theme=dark>
+                        </div>
+                        <p id="sCaptcha" style="color : red">Captcha is required</p>
 
 
                         <div class="p-t-10 text-center">
@@ -82,6 +87,7 @@
     <script src="./js/global.js"></script>
 
     <script>
+        $("#sCaptcha").hide();
         let url1 = "http://localhost:5000";
         $.ajax({
             url: url1 + "/getUserState",
@@ -118,6 +124,12 @@
 
             var name = $("#userName").val();
             var passwd = $("#password").val();
+            var captcha = grecaptcha.getResponse();
+
+            if (captcha == "") {
+                $("#sCaptcha").show();
+                return;
+            }
 
             $.ajax({
                 url: url1 + "/login",
@@ -125,6 +137,7 @@
                 data: {
                     userName: name,
                     password: passwd,
+                    captchaToken: captcha
                 },
                 crossDomain: true,
                 success: function (res) {

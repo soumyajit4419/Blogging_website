@@ -5,7 +5,7 @@
     <!-- Required meta tags-->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<!-- Title Page-->
+    <!-- Title Page-->
     <title>Signup page</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
     <script src="https://code.jquery.com/jquery-3.4.1.js" crossorigin="anonymous"></script>
@@ -25,6 +25,8 @@
 
     <!-- Main CSS-->
     <link href="./css/main.css" rel="stylesheet" media="all">
+
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </head>
 
 <body>
@@ -72,6 +74,10 @@
                                 id="phoneNumber" required>
                         </div>
 
+                        <div class="g-recaptcha" data-sitekey=6LcM-ckUAAAAAOWdRKefqgT9K_kpzE9LJCZDkDVN data-theme=dark>
+                        </div>
+                        <p id="sCaptcha" style="color : red">Captcha is required</p>
+
 
                         <div class="p-t-10 text-center">
                             <button class="btn btn--pill btn--green" type="submit" onclick="execute()">Register</button>
@@ -94,7 +100,7 @@
             </div>
         </div>
 
-        
+
         <!-- Vendor JS-->
         <script src="./vendor/select2/select2.min.js"></script>
         <script src="./vendor/datepicker/moment.min.js"></script>
@@ -104,7 +110,7 @@
         <script src="./js/global.js"></script>
 
         <script>
-
+            $("#sCaptcha").hide();
 
             function execute() {
                 let url1 = "http://localhost:5000";
@@ -115,6 +121,13 @@
                 var passwd = $("#password").val();
                 var cpasswd = $("#cpassword").val();
                 var gender = $("#gender").val();
+                var captcha = grecaptcha.getResponse();
+              
+
+                if (captcha == "") {
+                    $("#sCaptcha").show();
+                    return;
+                }
 
                 if (name === "") {
                     $("#userName").show();
@@ -154,7 +167,8 @@
                         phone: phno,
                         password: passwd,
                         cpassword: cpasswd,
-                        gender: gender
+                        gender: gender,
+                        captchaToken: captcha
 
                     },
                     crossDomain: true,
