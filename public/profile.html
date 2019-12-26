@@ -6,10 +6,6 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Lora:400,400i,700,700i&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Abril+Fatface&display=swap" rel="stylesheet">
-
     <link rel="stylesheet" href="./css/open-iconic-bootstrap.min.css">
     <link rel="stylesheet" href="./css/animate.css">
 
@@ -24,7 +20,7 @@
     <link rel="stylesheet" href="./css/bootstrap-datepicker.css">
     <link rel="stylesheet" href="./css/jquery.timepicker.css">
 
-
+    <link href="./css/profile.css" rel="stylesheet" media="all">
     <link rel="stylesheet" href="./css/flaticon.css">
     <link rel="stylesheet" href="./css/icomoon.css">
     <link rel="stylesheet" href="./css/style.css">
@@ -63,7 +59,8 @@
                 <div class="container">
                     <div class="row d-flex">
                         <div class="col-xl-10 px-md-5 py-5">
-                            <h1 id="colorlib-logo" class="mb-5 text-center"><a href="">USER BLOGS
+                            <h1 id="colorlib-logo" class="mb-5 text-center"><a href=""
+                                    style="color: rgb(245, 243, 239);">USER BLOGS
                                     <span></span></a></h1>
                             <div class="row pt-md-4" id="main">
 
@@ -119,6 +116,7 @@
             window.location = "travel.html";
         })
 
+
         var url1 = "http://localhost:5000";
         $.ajax({
             url: url1 + "/getUserPosts",
@@ -159,20 +157,54 @@
 																<div class="half order-md-last text-md-right">
 																	<p class="meta">
 																		<span><i class="icon-heart"></i>3</span>
-																		<span><i class="icon-eye"></i>100</span>
-																		<span><i class="icon-comment"></i>5</span>
 																	</p>
 																</div>
 																
 															</div>
 														</div>
+                                                        <br>
                                                         <div class="text-center">
                                                          <button class="btn btn--radius-1 text-center"
                                                              style="background-color: rgb(39, 37, 38);color: whitesmoke;"
                                                           id="${res.post[i]._id}" onclick="deletePost(this.id)">Delete Post</button>
+                                                          &nbsp &nbsp &nbsp
+                                                          <button class="btn btn--radius-1 text-center"
+                                                             style="background-color: rgb(39, 37, 38);color: whitesmoke;"
+                                                          id="editPostShow">Edit Post</button>
                                                          </div>
+                                         <form >
+                                            <div class="text-center" id="hideForm">
+                                                <div class="form-row">
+                                                    <div class="name">Headline</div>
+                                                    <div class="value">
+                                                        <div class="input-group">
+                                                            <input class="input--style-6" type="text" name="headline"
+                                                                id="headline"
+                                                                placeholder="Enter the headline or what the post is about.."
+                                                                required>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-row">
+                                                    <div class="name">Message</div>
+                                                    <div class="value">
+                                                        <div class="input-group">
+                                                            <textarea class="textarea--style-6" type="text"
+                                                                name="message" id="message"
+                                                                placeholder="Enter any comment about the post"
+                                                                required></textarea>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <br><br>
+                                                <div class=" col-md-5 text-center mx-auto">
+                                                    <button class="btn btn-danger" id="${res.post[i]._id}" onclick="editPost(this.id)">
+                                                        Edit </button>
+                                                </div>
+                                        </form>
 													</div>
 												</div>`)
+                        $("#hideForm").hide();
 
                     }
 
@@ -186,6 +218,7 @@
 
         });
 
+       
         function deletePost(idVal) {
 
             console.log(idVal);
@@ -221,6 +254,44 @@
             });
 
         }
+
+
+        function editPost(idVal) {
+
+            console.log(idVal);
+            $.ajax({
+                url: url1 + "/deletePost",
+                method: "POST",
+                headers: {
+                    "access-token": localStorage.getItem("token")
+                },
+                data: {
+                    postId: idVal
+                },
+                crossDomain: true,
+                success: function (res) {
+                    console.log(res);
+                    if (res.status === 200) {
+                        $("#message").text(res.message);
+                        setTimeout(function () {
+                            window.location.reload(true);
+                        }, 5000);
+                    }
+                    else {
+                        $("#message").text(res.message)
+                    }
+
+                },
+                error: function (err) {
+                    console.log(err);
+                    alert(err);
+                }
+
+
+            });
+
+        }
+
 
     </script>
 
