@@ -156,7 +156,7 @@
 															<div class="meta-wrap d-md-flex align-items-center">
 																<div class="half order-md-last text-md-right">
 																	<p class="meta">
-																		<span><i class="icon-heart"></i>3</span>
+																		<span><i class="icon-heart"></i> ${res.post[i].likes}</span>
 																	</p>
 																</div>
 																
@@ -170,38 +170,8 @@
                                                           &nbsp &nbsp &nbsp
                                                           <button class="btn btn--radius-1 text-center"
                                                              style="background-color: rgb(39, 37, 38);color: whitesmoke;"
-                                                          id="editPostShow">Edit Post</button>
+                                                          id="${res.post[i]._id}"onClick="editPost(this.id)" >Edit Post</button>
                                                          </div>
-                                         <form >
-                                            <div class="text-center" id="hideForm">
-                                                <div class="form-row">
-                                                    <div class="name">Headline</div>
-                                                    <div class="value">
-                                                        <div class="input-group">
-                                                            <input class="input--style-6" type="text" name="headline"
-                                                                id="headline"
-                                                                placeholder="Enter the headline or what the post is about.."
-                                                                required>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="form-row">
-                                                    <div class="name">Message</div>
-                                                    <div class="value">
-                                                        <div class="input-group">
-                                                            <textarea class="textarea--style-6" type="text"
-                                                                name="message" id="message"
-                                                                placeholder="Enter any comment about the post"
-                                                                required></textarea>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <br><br>
-                                                <div class=" col-md-5 text-center mx-auto">
-                                                    <button class="btn btn-danger" id="${res.post[i]._id}" onclick="editPost(this.id)">
-                                                        Edit </button>
-                                                </div>
-                                        </form>
 													</div>
 												</div>`)
                         $("#hideForm").hide();
@@ -218,7 +188,7 @@
 
         });
 
-       
+
         function deletePost(idVal) {
 
             console.log(idVal);
@@ -259,37 +229,9 @@
         function editPost(idVal) {
 
             console.log(idVal);
-            $.ajax({
-                url: url1 + "/deletePost",
-                method: "POST",
-                headers: {
-                    "access-token": localStorage.getItem("token")
-                },
-                data: {
-                    postId: idVal
-                },
-                crossDomain: true,
-                success: function (res) {
-                    console.log(res);
-                    if (res.status === 200) {
-                        $("#message").text(res.message);
-                        setTimeout(function () {
-                            window.location.reload(true);
-                        }, 5000);
-                    }
-                    else {
-                        $("#message").text(res.message)
-                    }
-
-                },
-                error: function (err) {
-                    console.log(err);
-                    alert(err);
-                }
-
-
-            });
-
+            var data = idVal;
+            window.location = "editpost.html?id=" + data;
+            
         }
 
 

@@ -6,6 +6,7 @@ const User = require('../models/userRegistration');
 const { check, validationResult } = require('express-validator');
 const request = require('request');
 
+
 const multer = require('multer');
 var storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -70,13 +71,14 @@ router.post('/signup', [
     },
 
     function (req, res, next) {
+        const fullName = req.body.fullName;
         const userName = req.body.userName;
         const email = req.body.email;
         const phoneNumber = req.body.phone;
         const password = req.body.password;
         const gender = req.body.gender;
         const emailOTP = Math.floor(100000 + Math.random() * 900000).toString();
-        const newUser = new User({ userName: userName, email: email, phoneNumber: phoneNumber, password: password, emailOTP: emailOTP, isVerfied: false, gender: gender });
+        const newUser = new User({ fullName: fullName, userName: userName, email: email, phoneNumber: phoneNumber, password: password, emailOTP: emailOTP, isVerfied: false, gender: gender });
 
         newUser.save(function (err, user) {
             if (err) return res.json({ status: 500, message: "internal server error", err: err });
@@ -285,8 +287,6 @@ router.post('/upload', upload.single('file'), verifyToken, function (req, res, n
             user.post.push({ headline: headline, message: message, imageName: file });
             user.save();
 
-            var newPosts = new Posts({ headline: headline, message: message, imageName: file, userName: userName });
-            newPosts.save();
 
             return res.json({ status: 200, message: "post added successfully" });
         }
@@ -306,7 +306,7 @@ router.get('/getAllPosts', function (req, res, next) {
             var userData = [];
             user.forEach(function (value, array) {
                 // console.log(value);
-                userData.push(value.userName);
+                userData.push(value.fullName);
                 userPost.push(value.post);
             });
 
@@ -332,6 +332,63 @@ router.get('/getUserName', verifyToken, function (req, res, next) {
 
     });
 })
+
+router.post('/getPostById', verifyToken, function (req, res, next) {
+    const id = req.userId;
+    User.findById(id, function (err, user) {
+        if (err) {
+            return res.json({ status: 500, message: 'Internal server error!', err: err });
+        }
+        else if (!user) {
+            return res.json({ status: 422, message: 'no user found' });
+        }
+        else if (user) {
+            const postId = req.body.postId;
+            for (i = 0; i < user.post.length; i++) {
+                if (user.post[i]._id == postId) {
+                    // console.log(user.post[i]);
+                    return res.json({ status: 200, headline: user.post[i].headline, message: user.post[i].message })
+                }
+                else {
+                    console.log("Post Not Found");
+                }
+
+            }
+        }
+    })
+});
+
+router.post('/editPost', verifyToken, function (req, res, next) {
+    const id = req.userId;
+
+    User.findById(id, function (err, user) {
+        if (err) {
+            return res.json({ status: 500, message: 'Internal server error!', err: err });
+        }
+        else if (!user) {
+            return res.json({ status: 422, message: 'no user found' });
+        }
+        else if (user) {
+            const postId = req.body.postId;
+            const newMessage = req.body.newMessage;
+            const newHeadline = req.body.newHeadline;
+            var k = 0;
+            for (i = 0; i < user.post.length; i++) {
+                if (user.post[i]._id == postId) {
+                    // console.log(user.post[i]);
+                    user.post[i].message = newMessage;
+                    user.post[i].headline = newHeadline;
+                    user.save();
+                    k = 1;
+                    return res.json({ status: 200, message: 'post updated sucessfully' });
+
+                }
+            }
+            if (k == 0) { return res.json({ status: 422, message: 'post not found' }); }
+        }
+    })
+});
+
 
 router.get('/getUserPosts', verifyToken, function (req, res, next) {
 

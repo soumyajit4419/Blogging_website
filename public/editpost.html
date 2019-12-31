@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    <title>Add Blogs</title>
+    <title>Edit Blogs</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
@@ -36,7 +36,7 @@
                 <ul>
                     <li><a href="travel.html">Home</a></li>
                     <li><a href="profile.html">My Blogs</a></li>
-                    <li class="colorlib-active"><a href="addblog.html">Add Blog</a></li>
+                    <li><a href="addblog.html">Add Blog</a></li>
                     <li><a href="updateDetail.html">Update Details</a></li>
                     <button class="btn btn--radius-2" style="background-color: rgb(195, 50, 98);color: whitesmoke;"
                         id="logout">LOGOUT</button>
@@ -60,11 +60,12 @@
                 <div class="container-fluid px-0">
                     <div class="row ">
                         <div class="col-md-10 ">
-                            <form action="" id="PostForm" class="form-horizontal" method="" role="form"
-                                enctype="multipart/form-data" onsubmit=event.preventDefault()>
+                            <form action="" id="PostForm" class="form-horizontal" method=""
+                                onsubmit=event.preventDefault() style="padding-bottom: 210px;">
                                 <br>
                                 <br>
-                                <h2 class="text-center" style="color: whitesmoke;">Enter the details of the post</h2>
+                                <h2 class="text-center" style="color: whitesmoke;">Enter the new details of the post
+                                </h2>
 
                                 <div class="form-row">
                                     <div class="name">Headline</div>
@@ -84,35 +85,24 @@
                                         </div>
                                     </div>
                                 </div>
-
-                                <div class="form-group form-row">
-                                    <label for="file" class="col-md-9 control-label name">Upload Image</label>
-                                    <div class="value">
-                                        <div class="col-md-9 input-group ">
-                                            <input type="file" class="form-control btn-danger" name="file" accept="image/*"
-                                                required>
-                                        </div>
-                                    </div>
-                                </div>
-
+                                <br><br>
                                 <div class=" col-md-2 text-center mx-auto">
-                                    <input type="submit" name="submit" value="Post" class="btn btn-danger"
-                                        id="fileUpload">
+                                    <input type="submit" name="submit" value="Edit " class="btn btn-danger"
+                                        id="editBtn">
                                 </div>
                                 <br>
-                                <h4 class="text-center" id="uploadMsg" style="color: whitesmoke;"></h4>
+                                <h4 class="text-center" id="uploadMsg"></h4>
+
                             </form>
                             <br>
-                            <div class=" col-md-5 text-center mx-auto">
-                                <button class="btn btn-danger" id="addAnother" onclick="btnshow()"> Add another
-                                    post</button>
-                            </div>
 
                         </div>
+
                     </div>
                 </div>
+
             </section>
-            <br><br><br><br>
+
         </div>
     </div>
 
@@ -139,77 +129,71 @@
     <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery.form/3.51/jquery.form.min.js"></script>
 
     <script>
-        $("#addAnother").hide();
-        var url1 = "http://localhost:5000";
-        $("#logout").click(function () {
-            localStorage.clear();
-            window.location = "travel.html";
-        });
 
-        function btnshow() {
-            window.location.reload();
-        }
+        var url1 = "http://localhost:5000";
+        var urlParams = new URLSearchParams(location.search);
+        var postId = urlParams.get('id');
+
+        console.log(postId);
+        $("#editBtn").click(function () {
+            var newMessage = $("#message").val();
+            var newHeadline = $("#headline").val();
+            $.ajax({
+                url: url1 + "/editPost",
+                method: "POST",
+                headers: {
+                    "access-token": localStorage.getItem("token")
+                },
+                data: {
+                    postId: postId,
+                    newMessage: newMessage,
+                    newHeadline: newHeadline
+                },
+                crossDomain: true,
+                success: function (res) {
+
+                    if (res.status == 200) {
+                        console.log(res);
+                        $("#uploadMsg").text(res.message);
+                        window.location = "profile.html"
+                    }
+                    else {
+                        console.log(res);
+                        $("#uploadMsg").text(res.message);
+                    }
+                },
+
+                error: function (err) {
+                    console.log(err);
+                }
+
+            });
+        })
+
+
         $.ajax({
-            url: url1 + "/getUserName",
-            method: "GET",
+            url: url1 + "/getPostById",
+            method: "POST",
             headers: {
                 "access-token": localStorage.getItem("token")
             },
+            data: {
+                postId: postId
+            },
             crossDomain: true,
             success: function (res) {
-                console.log(res);
-                $("#nameAdd").text(res.userName);
-
+                // console.log(res);
+                $("#headline").val(res.headline);
+                $("#message").val(res.message);
             },
+
             error: function (err) {
                 console.log(err);
             }
 
         });
 
-        $('#PostForm').submit(function () {
-
-            var headline = $("#headline").val().toString();
-            var message = $("#message").val().toString();
-            if (headline == "") {
-                $("#headline").show();
-                return;
-            }
-
-            if (message == "") {
-                $("#message").show();
-                return;
-            }
-            $(this).ajaxSubmit({
-                url: url1 + "/upload",
-                headers: {
-                    "access-token": localStorage.getItem("token")
-                },
-                method: "POST",
-                crossDomain: true,
-                error: function (err) {
-                    console.log(err);
-                },
-
-                success: function (res) {
-
-                    if (res.status === 200) {
-                        console.log(res);
-                        $("#uploadMsg").text("post added successfully");
-                        $("#addAnother").show();
-                    }
-                    else if (res.status !== 200) {
-                        console.log(res);
-                    }
-                }
-            });
-
-            return false;
-        });
-
-
     </script>
-
 </body>
 
 </html>

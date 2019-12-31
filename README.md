@@ -13,9 +13,12 @@ To get the Node server running locally:
 - `npm start` to start the local server
 
 # Code Overview
-     User have to register and login in order to post something.
-     All the user and view the posts.
-     Only user can update the personal deatils and post details.
+- User have to register and login in order to post something.
+- All the user and view the posts.
+- Only user can update the personal deatils and post details.
+- All the forms are protected by google Captcha v2.
+
+
 
 ## Dependencies
 
